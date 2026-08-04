@@ -1,0 +1,8 @@
+{
+  "symbol": "SKHX_USDT_PERP",
+  "duration_seconds": 35,
+  "depth_limit": 100,
+  "rest_base": "https://api.pionex.com",
+  "ws_url": "wss://ws.pionex.com/wsPub",
+  "output_dir": "probe_data"
+}
