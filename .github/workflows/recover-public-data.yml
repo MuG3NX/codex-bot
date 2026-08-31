@@ -1,0 +1,44 @@
+name: Recover public tweet and market data
+
+on:
+  push:
+    branches:
+      - research/public-data-recovery-2026-08-31
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Recover public evidence
+        run: python recover_public_data.py
+
+      - name: Show recovery report
+        if: always()
+        run: |
+          find recovered -maxdepth 3 -type f -printf '%p %s bytes\n' | sort || true
+          cat recovered/report.json || true
+
+      - name: Upload recovered evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stoic-public-evidence-2026-08-31
+          path: recovered
+          if-no-files-found: error
+          retention-days: 3
